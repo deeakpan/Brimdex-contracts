@@ -2,7 +2,9 @@
 pragma solidity ^0.8.24;
 
 /// @title OrderPriceVolumeSet
-/// @notice Library for tracking user orders by order ID, price, and volume
+/// @notice Library for tracking user orders by order ID, price, and volume.
+///         Copied verbatim from `contracts/libraries/OrderPriceVolumeSet.sol` so the new
+///         CTF-based orderbook is self-contained under `LMSR/Brimdex/`.
 library OrderPriceVolumeSet {
     struct OPVnode {
         bytes32 _orderId;

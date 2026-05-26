@@ -2,7 +2,11 @@
 pragma solidity ^0.8.24;
 
 /// @title OrderBookLinkedList
-/// @notice Linked list library for managing order queues in the order book
+/// @notice Linked list library for managing order queues in the order book.
+/// @dev All functions are internal — inlined into the caller, no DELEGATECALL.
+///      Copied verbatim from `contracts/libraries/OrderBookLinkedList.sol` so the new
+///      CTF-based orderbook can live entirely under `LMSR/Brimdex/` without crossing
+///      compilation boundaries.
 library OrderBookLinkedList {
     struct Order {
         address seller;
@@ -25,7 +29,7 @@ library OrderBookLinkedList {
         LinkedList storage self,
         address _seller,
         uint256 _amount
-    ) public returns (bytes32) {
+    ) internal returns (bytes32) {
         Order memory o = Order(_seller, _amount);
         Node memory n = Node(0, o);
 
@@ -42,14 +46,14 @@ library OrderBookLinkedList {
     }
 
     function getNode(LinkedList storage self, bytes32 _id)
-        public
+        internal
         view
         returns (Node memory)
     {
         return self.nodes[_id];
     }
 
-    function getLength(LinkedList storage self) public view returns (uint256) {
+    function getLength(LinkedList storage self) internal view returns (uint256) {
         return self.length;
     }
 
@@ -57,7 +61,7 @@ library OrderBookLinkedList {
         LinkedList storage self,
         address _seller,
         uint256 _amount
-    ) public returns (bytes32) {
+    ) internal returns (bytes32) {
         Order memory o = Order(_seller, _amount);
         Node memory n = Node(0, o);
 
@@ -72,7 +76,7 @@ library OrderBookLinkedList {
         return id;
     }
 
-    function popHead(LinkedList storage self) public returns (bool) {
+    function popHead(LinkedList storage self) internal returns (bool) {
         bytes32 currHead = self.head;
 
         self.head = self.nodes[currHead].next;
@@ -83,7 +87,7 @@ library OrderBookLinkedList {
     }
 
     function deleteNode(LinkedList storage self, bytes32 _id)
-        public
+        internal
         returns (bool)
     {
         if (self.head == _id) {
